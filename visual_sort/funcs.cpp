@@ -94,6 +94,11 @@ void insertion_sort(elem arr[], int size)
 
 int partition (elem arr[], int low, int high)
 {
+    mt19937 gen(time(0)); usleep(90);
+    uniform_int_distribution<> uid(low, high); usleep(90);
+    int random = uid(gen); usleep(90);
+    swap_elements(arr, random, high); usleep(90);
+    
     int pivot = arr[high].value;  usleep(90);
     int i = (low - 1);  usleep(90);
  
