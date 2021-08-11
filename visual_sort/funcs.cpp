@@ -344,3 +344,27 @@ void heap_sort (elem a[], int length, int heap_size)
         max_heapify(a, 0, heap_size); usleep(90);
     }
 }
+
+void counting_sort (elem b[], elem a[], int k, int length) //массивы поставлены наоборот, чтобы можно было заметить визуализацию 
+{
+    sf::Vector2f pos;
+    
+    int* c = new int[k + 1]; usleep(90);
+    for (int i = 0; i <= k; i++)
+    c[i] = 0; usleep(90);
+    
+    for (int j = 0; j < length; j++)
+    c[a[j].value] += 1; usleep(90);
+    
+    for (int i = 1; i <= k; i++)
+    c[i] += c[i - 1]; usleep(90);
+    
+    for (int j = length - 1; j >= 0; j--)
+    {
+        pos =  b[c[a[j].value] - 1].shape.getPosition();
+        b[c[a[j].value] - 1] = a[j]; usleep(90);
+        
+        b[c[a[j].value] - 1].shape.setPosition(pos);
+        c[a[j].value] -= 1; usleep(90);
+    }
+}

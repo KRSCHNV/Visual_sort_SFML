@@ -29,7 +29,7 @@ struct button //структура кнопки
     sf::Text text;
 };
 
-enum sortt {bubble_sort_en, selection_sort_en, insertion_sort_en, quick_sort_en, merge_sort_en, heap_sort_en};
+enum sortt {bubble_sort_en, selection_sort_en, insertion_sort_en, quick_sort_en, merge_sort_en, heap_sort_en, counting_sort_en};
 struct radio_button //структура radio button
 {
     sf::CircleShape background;
@@ -60,5 +60,6 @@ int right (int i); //номер правого дочернего элемент
 void max_heapify (elem a[], int i, int heap_size); //поддержка свойств бинарного дерева
 void build_max_heap (elem a[], int length, int &heap_size); //построение бинарного дерева
 void heap_sort (elem a[], int length, int heap_size); //сортировка с помощью кучи (пирамидальная сортировка)
+void counting_sort (elem b[], elem a[], int k, int length); //сортировка подсчётом
 
 #endif /* funcs_hpp */
