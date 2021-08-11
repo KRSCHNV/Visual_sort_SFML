@@ -19,9 +19,9 @@ void generate_array(elem arr[], int length, float elem_width, float height_one, 
                 flag = true;
                 sf::RectangleShape sh;
                 sh.setSize(sf::Vector2f(elem_width, height_one * random));
-                sh.setFillColor(sf::Color::Black);
                 sh.setOrigin(0, sh.getSize().y);
                 sh.setPosition(w.getSize().x * 0.1 + i * elem_width, w.getSize().y * 0.75f);
+                sh.setFillColor(sf::Color(random / 3, random / 10, random / 20));
                 elem new_elem = {sh, random};
                 arr[i] = new_elem;
             }
