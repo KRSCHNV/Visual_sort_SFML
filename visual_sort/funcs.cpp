@@ -345,26 +345,68 @@ void heap_sort (elem a[], int length, int heap_size)
     }
 }
 
-void counting_sort (elem b[], elem a[], int k, int length) //массивы поставлены наоборот, чтобы можно было заметить визуализацию 
+void counting_sort (elem b[], elem a[], int k, int length, bool mode, int exp) //массивы поставлены наоборот, чтобы можно было заметить визуализацию
 {
     sf::Vector2f pos;
     
-    int* c = new int[k + 1]; usleep(90);
-    for (int i = 0; i <= k; i++)
-    c[i] = 0; usleep(90);
-    
-    for (int j = 0; j < length; j++)
-    c[a[j].value] += 1; usleep(90);
-    
-    for (int i = 1; i <= k; i++)
-    c[i] += c[i - 1]; usleep(90);
-    
-    for (int j = length - 1; j >= 0; j--)
+    if (!mode)
     {
-        pos =  b[c[a[j].value] - 1].shape.getPosition();
-        b[c[a[j].value] - 1] = a[j]; usleep(90);
+        int* c = new int[k + 1]; usleep(90);
+        for (int i = 0; i <= k; i++)
+        c[i] = 0; usleep(90);
         
-        b[c[a[j].value] - 1].shape.setPosition(pos);
-        c[a[j].value] -= 1; usleep(90);
+        for (int j = 0; j < length; j++)
+        c[a[j].value] += 1; usleep(90);
+        
+        for (int i = 1; i <= k; i++)
+        c[i] += c[i - 1]; usleep(90);
+        
+        for (int j = length - 1; j >= 0; j--)
+        {
+            pos =  b[c[a[j].value] - 1].shape.getPosition();
+            b[c[a[j].value] - 1] = a[j]; usleep(90);
+            
+            b[c[a[j].value] - 1].shape.setPosition(pos);
+            c[a[j].value] -= 1; usleep(90);
+        }
     }
+    else
+    {
+        int i, count[10] = {0}; usleep(90);
+     
+        for (i = 0; i < length; i++)
+        count[(a[i].value / exp) % 10]++; usleep(90);
+     
+        for (i = 1; i < 10; i++)
+        count[i] += count[i - 1]; usleep(90);
+     
+        for (i = length - 1; i >= 0; i--) {
+            pos = b[count[(a[i].value / exp) % 10] - 1].shape.getPosition();
+            b[count[(a[i].value / exp) % 10] - 1] = a[i]; usleep(90);
+            
+            b[count[(a[i].value / exp) % 10] - 1].shape.setPosition(pos);
+            count[(a[i].value / exp) % 10]--; usleep(90);
+        }
+     
+        for (i = 0; i < length; i++)
+        a[i] = b[i]; usleep(90);
+    }
+}
+
+int get_max(elem arr[], int n)
+{
+    int max = arr[0].value;
+    for (int i = 1; i < n; i++)
+        if (arr[i].value > max)
+            max = arr[i].value;
+    return max;
+}
+
+void radix_sort(elem a[], elem b[], int n)
+{
+    int m = get_max(a, n);
+    
+    
+    for (int exp = 1; m / exp > 0; exp *= 10)
+        counting_sort (a, b, m, n, true, exp);
 }

@@ -32,7 +32,7 @@ int main(int, char const**)
     devide_line_1.setPosition(2 * generate_array_btn.body.getPosition().x + generate_array_btn.body.getLocalBounds().width - 3, background.getPosition().y);
     devide_line_1.setFillColor(sf::Color(110, 40, 40));
     
-    radio_button bubble_sort_rb, selection_sort_rb, insertion_sort_rb, quick_sort_rb, merge_sort_rb, heap_sort_rb, counting_sort_rb;
+    radio_button bubble_sort_rb, selection_sort_rb, insertion_sort_rb, quick_sort_rb, merge_sort_rb, heap_sort_rb, counting_sort_rb, radix_sort_rb;
     init_radio_button(bubble_sort_rb, 0.17, 0.77, sf::Color(110, 40, 40), "BUBBLE SORT", QlassikBold, sf::Color::White, 0.055, window, bubble_sort_en);
     init_radio_button(selection_sort_rb, 0.47, 0.77, sf::Color(110, 40, 40), "SELECTION SORT", QlassikBold, sf::Color::White, 0.055, window, selection_sort_en);
     init_radio_button(insertion_sort_rb, 0.77, 0.77, sf::Color(110, 40, 40), "INSERTION SORT", QlassikBold, sf::Color::White, 0.055, window, insertion_sort_en);
@@ -40,7 +40,8 @@ int main(int, char const**)
     init_radio_button(merge_sort_rb, 0.47, 0.85, sf::Color(110, 40, 40), "MERGE SORT", QlassikBold, sf::Color::White, 0.055, window, merge_sort_en);
     init_radio_button(heap_sort_rb, 0.77, 0.85, sf::Color(110, 40, 40), "HEAP SORT", QlassikBold, sf::Color::White, 0.055, window, heap_sort_en);
     init_radio_button(counting_sort_rb, 0.17, 0.93, sf::Color(110, 40, 40), "COUNTING SORT", QlassikBold, sf::Color::White, 0.055, window, counting_sort_en);
-    radio_button radio_button_arr[7] = {bubble_sort_rb, selection_sort_rb, insertion_sort_rb, quick_sort_rb, merge_sort_rb, heap_sort_rb, counting_sort_rb};
+    init_radio_button(radix_sort_rb, 0.47, 0.93, sf::Color(110, 40, 40), "RADIX SORT", QlassikBold, sf::Color::White, 0.055, window, radix_sort_en);
+    radio_button radio_button_arr[8] = {bubble_sort_rb, selection_sort_rb, insertion_sort_rb, quick_sort_rb, merge_sort_rb, heap_sort_rb, counting_sort_rb, radix_sort_rb};
     radio_button_arr[0].checked = true;
     bool radio_button_flag = false;
     
@@ -52,12 +53,7 @@ int main(int, char const**)
     copy(begin(array), end(array), begin(old_array));
     copy(begin(array), end(array), begin(plus_array));
     
-    int heap_size; //для сортировка кучей
-    //thread th(selection_sort, array, 512);
-    //thread th(insertion_sort, array, 512);
-    //thread th(quick_sort, array, 0, 511);
-    //thread th(merge_sort, array, 0, 511);
-    //th.detach();
+    int heap_size; //для сортировки кучей
     
     while (window.isOpen())
     {
@@ -77,7 +73,7 @@ int main(int, char const**)
                 }
                 else if (mouse_on_button(mouse, window, button_arr[1]))
                 {
-                    for (int i = 0; i < 7; i++)
+                    for (int i = 0; i < 8; i++)
                     {
                         if (radio_button_arr[i].checked)
                         {
@@ -115,7 +111,12 @@ int main(int, char const**)
                             }
                             else if (radio_button_arr[i].sort_type == counting_sort_en)
                             {
-                                thread th(counting_sort, array, plus_array, 511, 512);
+                                thread th(counting_sort, array, plus_array, 511, 512, false, 1);
+                                th.detach();
+                            }
+                            else if (radio_button_arr[i].sort_type == radix_sort_en)
+                            {
+                                thread th(radix_sort, array, plus_array, 512);
                                 th.detach();
                             }
                         }
@@ -124,12 +125,12 @@ int main(int, char const**)
                 else if (mouse_on_button(mouse, window, button_arr[2]))
                     copy(begin(old_array), end(old_array), begin(array));
                 
-                for (int i = 0; i < 7; i++)
+                for (int i = 0; i < 8; i++)
                 {
                     if (mouse_on_radio_button(mouse, window, radio_button_arr[i]))
                     {
                         radio_button_arr[i].checked = true;
-                        for (int j = 0; j < 7; j++)
+                        for (int j = 0; j < 8; j++)
                         {
                             if (j != i)
                                 radio_button_arr[j].checked = false;
@@ -155,7 +156,7 @@ int main(int, char const**)
         //обработка наведения radio button
         if (!button_flag)
         {
-            for (int i = 0; i < 7; i++)
+            for (int i = 0; i < 8; i++)
             {
                 if (mouse_on_radio_button(mouse, window, radio_button_arr[i]))
                     radio_button_flag = true;
@@ -175,7 +176,7 @@ int main(int, char const**)
             window.draw(button_arr[i].text);
         }
         window.draw(devide_line_1);
-        for (int i = 0; i < 7; i++)
+        for (int i = 0; i < 8; i++)
         {
             window.draw(radio_button_arr[i].background);
             if (radio_button_arr[i].checked)
