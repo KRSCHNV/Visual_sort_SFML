@@ -6,20 +6,35 @@ int main(int, char const**)
     window.setFramerateLimit(60);
     
     //Интерфейс
-    sf::Font QlassikBold;
+    sf::Font QlassikBold, Abril;
     QlassikBold.loadFromFile("/Users/vladimirkorsunov/Desktop/Programming/SFML_learn/visual_sort/visual_sort/QlassikBold_TB.otf");
+    Abril.loadFromFile("/Users/vladimirkorsunov/Desktop/Programming/SFML_learn/visual_sort/visual_sort/AbrilFatface-Regular.ttf");
     
     sf::Mouse mouse;
     sf::Cursor cur_arrow, cur_hand;
     cur_arrow.loadFromSystem(sf::Cursor::Arrow);
     cur_hand.loadFromSystem(sf::Cursor::Hand);
     
-    sf::RectangleShape background, devide_line_1;
+    sf::RectangleShape background, background2, devide_line_1;
     background.setSize(sf::Vector2f(window.getSize().x, window.getSize().y * 0.25f));
     background.setPosition(0, window.getSize().y * 0.75f);
     background.setFillColor(sf::Color::Black);
     background.setOutlineThickness(-3.f);
     background.setOutlineColor(sf::Color(110, 40, 40, 255));
+    
+    background2.setSize(sf::Vector2f(window.getSize().x, window.getSize().y * 0.125));
+    background2.setPosition(0, 0);
+    background2.setFillColor(sf::Color::Black);
+    background2.setOutlineThickness(-3.f);
+    background2.setOutlineColor(sf::Color(110, 40, 40, 255));
+    
+    sf::Text sort_info;
+    sort_info.setCharacterSize(window.getSize().y * 0.045);
+    sort_info.setFont(Abril);
+    sort_info.setFillColor(sf::Color(110, 40, 40));
+    sort_info.setString("WORST-CASE - O(n^2) | AVERAGE - O(n^2) | BEST-CASE - O(n)");
+    sf::Glyph g = QlassikBold.getGlyph('|', window.getSize().y * 0.0625, false);
+    sort_info.setPosition((window.getSize().x - sort_info.getLocalBounds().width) / 2, (background2.getSize().y) / 2 - g.bounds.height / 2);
     
     button generate_array_btn, go_btn, back_btn;
     init_button(generate_array_btn, 0.005, 0.77, sf::Color(110, 40, 40), "GENERATE ARRAY", QlassikBold, sf::Color::Black, 0.035, window);
@@ -40,7 +55,7 @@ int main(int, char const**)
     init_radio_button(merge_sort_rb, 0.47, 0.85, sf::Color(110, 40, 40), "MERGE SORT", QlassikBold, sf::Color::White, 0.055, window, merge_sort_en);
     init_radio_button(heap_sort_rb, 0.77, 0.85, sf::Color(110, 40, 40), "HEAP SORT", QlassikBold, sf::Color::White, 0.055, window, heap_sort_en);
     init_radio_button(counting_sort_rb, 0.17, 0.93, sf::Color(110, 40, 40), "COUNTING SORT", QlassikBold, sf::Color::White, 0.055, window, counting_sort_en);
-    init_radio_button(radix_sort_rb, 0.47, 0.93, sf::Color(110, 40, 40), "RADIX SORT", QlassikBold, sf::Color::White, 0.055, window, radix_sort_en);
+    init_radio_button(radix_sort_rb, 0.77, 0.93, sf::Color(110, 40, 40), "RADIX SORT", QlassikBold, sf::Color::White, 0.055, window, radix_sort_en);
     radio_button radio_button_arr[8] = {bubble_sort_rb, selection_sort_rb, insertion_sort_rb, quick_sort_rb, merge_sort_rb, heap_sort_rb, counting_sort_rb, radix_sort_rb};
     radio_button_arr[0].checked = true;
     bool radio_button_flag = false;
@@ -130,6 +145,35 @@ int main(int, char const**)
                     if (mouse_on_radio_button(mouse, window, radio_button_arr[i]))
                     {
                         radio_button_arr[i].checked = true;
+                        switch (radio_button_arr[i].sort_type) {
+                            case bubble_sort_en:
+                                sort_info.setString("WORST-CASE - O(n^2) | AVERAGE - O(n^2) | BEST-CASE - O(n)");
+                                break;
+                            case selection_sort_en:
+                                sort_info.setString("WORST-CASE - O(n^2) | AVERAGE - O(n^2) | BEST-CASE - O(n^2)");
+                                break;
+                            case insertion_sort_en:
+                                sort_info.setString("WORST-CASE - O(n^2) | AVERAGE - O(n^2) | BEST-CASE - O(n)");
+                                break;
+                            case quick_sort_en:
+                                sort_info.setString("WORST-CASE - O(n^2) | AVERAGE - O(n*log(n)) | BEST-CASE - O(n*log(n))");
+                                break;
+                            case merge_sort_en:
+                                sort_info.setString("WORST-CASE - O(n*log(n)) | AVERAGE - O(n*log(n)) | BEST-CASE - O(n*log(n))");
+                                break;
+                            case heap_sort_en:
+                                sort_info.setString("WORST-CASE - O(n*log(n)) | AVERAGE - O(n*log(n)) | BEST-CASE - O(n*log(n))");
+                                break;
+                            case counting_sort_en:
+                                sort_info.setString("WORST-CASE - O(k) | AVERAGE - O(n+k) | BEST-CASE - O(n)");
+                                break;
+                            case radix_sort_en:
+                                sort_info.setString("WORST-CASE - O(n*lg(n)) | AVERAGE - O(n*lg(n)) | BEST-CASE - O(n*lg(n))");
+                                break;
+                            default:
+                                break;
+                        }
+                        sort_info.setPosition((window.getSize().x - sort_info.getLocalBounds().width) / 2, (background2.getSize().y) / 2 - g.bounds.height / 2);
                         for (int j = 0; j < 8; j++)
                         {
                             if (j != i)
@@ -169,6 +213,8 @@ int main(int, char const**)
         //отрисовка
         window.clear(sf::Color(87, 87, 87, 255));
         window.draw(background);
+        window.draw(background2);
+        window.draw(sort_info);
         draw_array(array, 512, window);
         for (int i = 0; i < 3; i++)
         {
